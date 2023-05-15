@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Currency;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,29 +22,29 @@ class DatabaseSeeder extends Seeder
                   'discountPercent' => 0,
               ],
               [
-                  'name' => 'Great Britain Pound',
+                  'name' => 'Great Britain Pound Sterling',
                   'code' => 'GBP',
                   'rate' =>  0.711178,
-                  'surchargePercent' => 0,
+                  'surchargePercent' => 5,
                   'discountPercent' => 0,
               ],
               [
                   'name' => 'European Monetary Union EURO',
                   'code' => 'EUR',
                   'rate' =>  0.884872,
-                  'surchargePercent' => 0,
+                  'surchargePercent' => 5,
                   'discountPercent' => 2,
               ],
               [
                   'name' => 'Japan Yen',
                   'code' => 'JPY',
                   'rate' =>  107.17,
-                  'surchargePercent' => 0,
+                  'surchargePercent' => 7.5,
                   'discountPercent' => 0,
               ],
           ];
 
-         \App\Models\User::factory(10)->create();
+         User::factory(1)->create();
 
          foreach ($currencies as $currencyData) {
             $currency = new Currency();
@@ -55,10 +55,5 @@ class DatabaseSeeder extends Seeder
             $currency->discount_percent = $currencyData['discountPercent'];
             $currency->save();
          }
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
