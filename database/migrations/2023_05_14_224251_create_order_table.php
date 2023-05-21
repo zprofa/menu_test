@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('purchased_currency');
             $table->float('purchased_amount', 20, 2);
-            $table->float('paid_amount_usd', 20, 2);
+            $table->float('paid_amount_usd', 20, 2)->index('IDX_order_paid_amount');
             $table->float('rate', 16, 6);
             $table->string('surcharge_percent', 5, 2);
             $table->string('surcharge_amount', 20, 2);
-            $table->string('discount_percent', 5, 2);
-            $table->string('discount_amount', 20, 2);
+            $table->string('discount_percent', 5, 2)->nullable();
+            $table->string('discount_amount', 20, 2)->nullable();
             $table->timestamps();
         });
     }

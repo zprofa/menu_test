@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Services\Currency;
+namespace App\Services\DTO;
 
-class CurrencyDTO
+class QuoteData
 {
-    public float $baseAmount;
+    public float $paidAmount;
     public float $purchaseAmount;
     public string $currency;
     public float $surchargeAmount;
     public int $surchargePercent;
-    public float $discountAmount;
-    public int $discountPercent;
     public float $total;
 }

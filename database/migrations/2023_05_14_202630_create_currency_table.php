@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('currency', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('code')->index('idx_currency_code')->unique();
+            $table->string('code')->unique();
             $table->float('rate', 16, 6);
             $table->float('surcharge_percent', 5, 2);
             $table->float('discount_percent', 5, 2);

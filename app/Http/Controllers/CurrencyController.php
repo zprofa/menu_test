@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Currency;
 use App\Services\Currency\CurrencyConversionCalculator;
+use App\Services\Currency\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\View\View;
@@ -12,6 +13,7 @@ class CurrencyController extends BaseController
 {
     public function __construct(
         private readonly CurrencyConversionCalculator $calculator,
+        private readonly Validator $validator,
     ) {
     }
 
@@ -29,6 +31,7 @@ class CurrencyController extends BaseController
 
     public function calculate(): JsonResponse
     {
+        $this->validator->validate(request());
         $amount = request()->get('amount');
         $currencyId = request()->get('currency');
 

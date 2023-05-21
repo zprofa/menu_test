@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int    $id
@@ -17,11 +18,7 @@ use Carbon\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Order
+class Order extends Model
 {
-
+    protected $table = 'order';
 }
-/*
- * Foreign currency purchased.• Exchange rate for foreign currency.• Surcharge percentage.• Amount of surcharge.•
- *  Amount of foreign currency purchased.• Amount paid in USD.• Discount percentage• Discount amount• Date created
- */

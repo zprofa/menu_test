@@ -16,6 +16,17 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <style>
+            #calculated_data .label {
+                width: 200px;
+                display: inline-block;
+                color: black;
+                text-align: left;
+                font-size: 14px;
+                font-weight: normal;
+                padding-left: 0;
+            }
+        </style>
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     </head>
@@ -24,6 +35,7 @@
             $(document).ready(function() {
                 var timeout;
                 var amountField = $('#amount');
+                window.quoteData = null;
 
                 amountField.on('keyup', function () {
                     clearTimeout(timeout);
@@ -36,20 +48,47 @@
                     getQuote();
                 })
 
+                $('#create_order').on('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (!window.quoteData) {
+                        alert('Something is wrong, did you entered currency and amount?');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/api/orders/create',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            orderData: window.quoteData
+                        },
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        error: function (response) {
+                            alert('Error occurred!');
+                        }
+                    });
+                })
+
                 function getQuote() {
                     var amount = amountField.val();
                     var currency = $('input[name="currency"]:checked').val();
 
                     if (!amount) {
                         alert('Amount is not entered!');
+                        return;
                     }
 
                     if (!currency) {
                         alert('Currency is not selected');
+                        return;
                     }
 
                     $.ajax({
-                        url: '/api/currency-calculate',
+                        url: '/api/currencies/calculate',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -57,14 +96,14 @@
                             currency: currency,
                         },
                         success: function (response) {
-                            console.log(response);
                             var quoteData = response.quoteData;
-                            console.log(quoteData);
-                            $('#base_amount').val(quoteData.baseAmount);
-                            $('#purchase_amount').val(quoteData.purchaseAmount);
-                            $('#surcharge_amount').val(quoteData.surchargeAmount);
-                            $('#discount_amount').val(quoteData.discountAmount);
-                            $('#total').val(quoteData.total);
+                            window.quoteData = quoteData
+                            $('#paid_amount').text(quoteData.paidAmount);
+                            $('#purchase_amount').text(quoteData.purchaseAmount);
+                            $('#surcharge_amount').text(quoteData.surchargeAmount);
+                            $('#discount_amount').text(quoteData.discountAmount);
+                            $('#total').text(quoteData.total);
+                            $('#currency_code').text(quoteData.currency);
                             $('#calculated_data').show();
                         },
                         error: function (response) {
@@ -110,27 +149,23 @@
                     <label for="calculated_amount">Calculated USD amount</label>
                 </div>
                 <div class="col-sm-12" id="calculated_data" style="display:none">
-                    <span>Purchase info:</span>
+                    <h2>Purchase info:</h2>
                     <div>
-                        <label for="base_amount">You want:</label>
-                        <input id="base_amount">
-                        <span id="currency"></span>
+                        <span class="label">You want:</span>
+                        <span id="purchase_amount"></span>
+                        <span id="currency_code"></span>
                     </div>
                     <div>
-                        <label for="purchase_amount">For:</label>
-                        <input id="purchase_amount">
+                        <span class="label">For:</span>
+                        <span id="paid_amount"></span>
                     </div>
                     <div>
-                        <label for="surcharge_amount">Our surcharge:</label>
-                        <input id="surcharge_amount">
+                        <span class="label">Our surcharge:</span>
+                        <span id="surcharge_amount"></span>&nbsp;USD
                     </div>
                     <div>
-                        <label for="discount_amount">With discount:</label>
-                        <input id="discount_amount">
-                    </div>
-                    <div>
-                        <label for="total">Total:</label>
-                        <input id="total">
+                        <span class="label">Total:</span>
+                        <span id="total"></span>
                     </div>
                     <button id="create_order">Purchase</button>
                 </div>
